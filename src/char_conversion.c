@@ -2769,9 +2769,9 @@ int utf8ToUnicodeChar (unsigned char *ch, int *unicode)
  * @return: Number of utf-16 character
  */
 /* ---------------------------------------------------------------------------*/
-int utf8ToUnicode (unsigned char * utf8_str,
-		unsigned short * unicode_str,
-		int unicode_str_size)
+int utf8ToUnicode (unsigned short * unicode_str,
+		int unicode_str_size,
+    unsigned char * utf8_str)
 {
 	int unicode = 0;
 	int n = 0;
@@ -2926,6 +2926,7 @@ int gb2312ToUtf8( char*  ptDestText,
 	nResult = 0;
 
   #if CHAR_USE_HEAP == 1 /*使用堆*/
+  memset(ptDestText, 0, nDestLength);
   unicode32ToUtf8(unicode32_text,malloc_len,ptDestText,nDestLength);
   char_con_free(unicode32_text);
   #else
@@ -2965,11 +2966,12 @@ int utf8ToGb2312(char *gb2312_str,
     return -1;
   }
 	memset(unicode16_text,0,malloc_len);
-	int cont = utf8ToUnicode((unsigned char * )utf8_str,unicode16_text,malloc_len);
+	int cont = utf8ToUnicode(unicode16_text,malloc_len,(unsigned char * )utf8_str);
   #else
   memset(unicode16_text,0,sizeof(unicode16_text));
-  int cont = utf8ToUnicode(utf8_str,unicode16_text,sizeof(unicode16_text));
+  int cont = utf8ToUnicode(unicode16_text,sizeof(unicode16_text),utf8_str);
   #endif
+  memset(gb2312_str, 0, len_gb2312);
 	for (i=0; i<cont; i++,index_temp++) {
 		if (unicode16_text[i] <= 0x80)
 			gb2312_str[index_temp] = unicode16_text[i];

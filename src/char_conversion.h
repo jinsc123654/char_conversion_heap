@@ -20,11 +20,15 @@
 #ifdef __cplusplus
 extern "C" {
 #endif  /* __cplusplus */
+extern char g_str_char_con_test_utf8[];
+extern char g_str_char_con_test_gbk[];
 
 	int utf8ToUnicodeChar (unsigned char *ch, int *unicode);
-	int utf8ToUnicode (unsigned char * utf8_str,
-			unsigned short * unicode_str,
-			int unicode_str_size);
+    
+	int utf8ToUnicode (unsigned short * unicode_str,
+			int unicode_str_size,
+		unsigned char * utf8_str);
+
 	int gb2312ToUtf8( char*  ptDestText,
 			int  nDestLength,
 			char*  ptSrcText,
@@ -34,6 +38,9 @@ extern "C" {
 			int len_gb2312,
 			char *utf8_str,
 			int len_utf8);
+
+    char *utf8_url_encode(const char *input);
+    char *utf8_url_decode(const char *input);
 
 #ifdef __cplusplus
 }
