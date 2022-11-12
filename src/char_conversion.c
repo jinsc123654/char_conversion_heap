@@ -20,6 +20,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#if 1/*开启之后可以屏蔽此文件在GCC中的特定警告*/
+#pragma GCC diagnostic ignored "-Wtype-limits"
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough="
+#endif
 /* ---------------------------------------------------------------------------*
  *                  extern variables declare
  *----------------------------------------------------------------------------*/
@@ -2805,8 +2809,8 @@ int utf8ToUnicode (unsigned char * utf8_str,
 int ucs4ToUtf8 (unsigned char *s, unsigned int uc, int n)
 {
 	int count;
-	int len=0;
-	unsigned char c[6];
+	// int len=0;
+	// unsigned char c[6];
 
 	if (uc < 0x80)
 		count = 1;
@@ -2837,10 +2841,10 @@ int ucs4ToUtf8 (unsigned char *s, unsigned int uc, int n)
 		case 6: s[5] = 0x80 | (uc & 0x3f); uc = uc >> 6; uc |= 0x4000000;
 		case 5: s[4] = 0x80 | (uc & 0x3f); uc = uc >> 6; uc |= 0x200000;
 #endif
-		case 4: s[3] = 0x80 | (uc & 0x3f); uc = uc >> 6; uc |= 0x10000;
-		case 3: s[2] = 0x80 | (uc & 0x3f); uc = uc >> 6; uc |= 0x800;
-		case 2: s[1] = 0x80 | (uc & 0x3f); uc = uc >> 6; uc |= 0xc0;
-		case 1: s[0] = uc;
+		case 4: s[3] = 0x80 | (uc & 0x3f); uc = uc >> 6; uc |= 0x10000;/*break;*/
+		case 3: s[2] = 0x80 | (uc & 0x3f); uc = uc >> 6; uc |= 0x800;/*break;*/
+		case 2: s[1] = 0x80 | (uc & 0x3f); uc = uc >> 6; uc |= 0xc0;/*break;*/
+		case 1: s[0] = uc;/*break; */
 	}
 
 	return count;
