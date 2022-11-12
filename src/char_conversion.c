@@ -2856,13 +2856,13 @@ void unicode32ToUtf8(unsigned int *unistr,long slen,char *utf8,long utf8bufsize)
 	p=utf8;
 	count=0;
 
-	while(w=*unistr++) {
+	while((w=*unistr++) != 0) {
 		if(slen != -1 && ++count> slen){
 			break;
 		}
 
 		//len=UnicodeToUtf8_char(w,autf8);
-		len = ucs4ToUtf8(autf8,w,slen);
+		len = ucs4ToUtf8((unsigned char * )autf8,w,slen);
 
 		//        printf(" w %x len %d \n",w,len);
 
@@ -2913,7 +2913,7 @@ int gb2312ToUtf8( char*  ptDestText,
 	for(i=0;i<(nSrcLength);i++,nTemp1++) {
 		if((ptSrcText[i]>=0x20) && (ptSrcText[i]<=0x80)) {
 			unicode32_text[nTemp1] = ptSrcText[i];
-		} else if(gb2312_mbtowc(0, &unicode32_text[nTemp1], &ptSrcText[i], 2) == 2) {
+		} else if(gb2312_mbtowc(0, &unicode32_text[nTemp1], (const unsigned char*)&ptSrcText[i], 2) == 2) {
 			i++;
 			nTemp++;
 		}
@@ -2961,7 +2961,7 @@ int utf8ToGb2312(char *gb2312_str,
     return -1;
   }
 	memset(unicode16_text,0,malloc_len);
-	int cont = utf8ToUnicode(utf8_str,unicode16_text,malloc_len);
+	int cont = utf8ToUnicode((unsigned char * )utf8_str,unicode16_text,malloc_len);
   #else
   memset(unicode16_text,0,sizeof(unicode16_text));
   int cont = utf8ToUnicode(utf8_str,unicode16_text,sizeof(unicode16_text));
@@ -2969,7 +2969,7 @@ int utf8ToGb2312(char *gb2312_str,
 	for (i=0; i<cont; i++,index_temp++) {
 		if (unicode16_text[i] <= 0x80)
 			gb2312_str[index_temp] = unicode16_text[i];
-		else if (gb2312_wctomb(0,&gb2312_str[index_temp],unicode16_text[i],2) == 2) {
+		else if (gb2312_wctomb(0,(unsigned char * )&gb2312_str[index_temp],unicode16_text[i],2) == 2) {
 			gb2312_str[index_temp] |= 0x80;
 			gb2312_str[++index_temp] |= 0x80;
 		}
